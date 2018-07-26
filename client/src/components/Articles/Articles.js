@@ -24,7 +24,7 @@ class Articles extends Component {
   loadArticles = () => {
     API.getArticles()
       .then(res =>
-        this.setState({ savedarticles: res.data, title: "", url: "" })
+        this.setState({ savedarticles: res.data })
       )
       .catch(err => console.log(err));
   };
@@ -42,10 +42,11 @@ class Articles extends Component {
     });
   };
 
-  handleSave = (t, u) => { 
+  handleSave = (t, u, d) => { 
       API.saveArticle({
         title: t,
-        url: u
+        url: u,
+        date: d
       }
       )
         .then(res => this.loadArticles())
@@ -126,7 +127,7 @@ class Articles extends Component {
                         <h5>
                           {article.pub_date}
                           </h5>
-                        <Button onClick={() => this.handleSave(article.headline.main, article.web_url)}>
+                        <Button onClick={() => this.handleSave(article.headline.main, article.web_url, article.pub_date)}>
                           Save Button
                       </Button>
                       </ListItem>
@@ -141,13 +142,16 @@ class Articles extends Component {
               </Jumbotron>
               {this.state.savedarticles.length ? (
                 <List>
-                  {this.state.articles.map(article => (
+                  {this.state.savedarticles.map(article => (
                     <ListItem key={article._id}>
                       <h1 href={article.url}>
                         <strong>
                           {article.title}
                         </strong>
                       </h1>
+                      <h5>
+                          {article.date}
+                          </h5>
                       <DeleteBtn onClick={() => this.deleteArticle(article._id)} />
                     </ListItem>
                   ))}
